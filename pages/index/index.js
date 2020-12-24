@@ -37,7 +37,8 @@ Page({
     }],
     todoList: wx.getStorageSync("todos") || [],
     editId: 0,
-    inputVal: ''
+    inputVal: '',
+    error: ''
   },
   /**
    * 切换底部导航
@@ -180,6 +181,7 @@ Page({
    */
   onLoad: function () {
     app.event.on('sync', this.syncEvent, this);
+    app.event.on('error', this.errorEvent, this);
   },
 
   /**
@@ -188,10 +190,22 @@ Page({
    * @param {*} todos 
    */
   syncEvent: function (todos) {
-    console.log('sync event', todos.length);
+    console.log('syncEvent', todos.length);
     this.setData({
       todoList: todos
     });
     this.stopLoading();
+  },
+
+  /**
+   * 异常事件
+   * 
+   * @param {*} msg 
+   */
+  errorEvent: function (msg) {
+    console.log('errorEvent', msg);
+    this.setData({
+      error: msg
+    });
   }
 })

@@ -149,7 +149,14 @@ App({
       data: JSON.stringify({
         operType: operType,
         note: note
-      })
+      }), 
+      success: function () {
+        console.log('send success');
+      }, 
+      fail: function () {
+        console.log('send fail');
+        that.event.emit('error', '网络异常，请稍后再试！');
+      }
     });
   }
 })

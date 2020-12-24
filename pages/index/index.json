@@ -5,6 +5,7 @@
     "mp-cell": "weui-miniprogram/cell/cell",
     "mp-slideview": "weui-miniprogram/slideview/slideview",
     "mp-tabbar": "weui-miniprogram/tabbar/tabbar",
-    "mp-loading": "weui-miniprogram/loading/loading"
+    "mp-loading": "weui-miniprogram/loading/loading",
+    "mp-toptips": "weui-miniprogram/toptips/toptips"
   }
 }
