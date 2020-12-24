@@ -7,6 +7,5 @@
     <include wx:if="{{tabIndex === 2}}" src="tabbars/calendar.wxml" />
     <include wx:if="{{tabIndex === 3}}" src="tabbars/about.wxml" />
   </view>
-  <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
   <mp-tabbar class="tabbar" list="{{tabbars}}" bindchange="tabChange"></mp-tabbar>
 </view>

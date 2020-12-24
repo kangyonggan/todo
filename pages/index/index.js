@@ -35,10 +35,8 @@ Page({
     }, {
       text: '完成'
     }],
-    todoList: [],
+    todoList: wx.getStorageSync("todos") || [],
     editId: 0,
-    isLoading: false,
-    error: '',
     inputVal: ''
   },
   /**
@@ -53,47 +51,30 @@ Page({
    * 删除/完成
    */
   slideButtonTap(e) {
-    let that = this;
-    if (that.data.isLoading) {
-      return;
-    }
-    that.startLoading();
-    wx.request({
-      method: e.detail.index ? "PUT" : "DELETE",
-      url: app.apiUrl + "/note",
-      data: {
-        id: e.currentTarget.dataset.id,
-        openid: wx.getStorageSync('openid'),
-        status: 'FINISH'
-      },
-      success: function (res) {
-        that.stopLoading();
-        if (res.data.respCo == '0000') {
-          var todoList = that.data.todoList;
-          var index = -1;
-          for (var i = 0; i < todoList.length; i++) {
-            if (todoList[i].id === e.currentTarget.dataset.id) {
-              index = i;
-              break;
-            }
-          }
-          todoList.splice(index, 1);
-          that.setData({
-            todoList: todoList
-          });
-        } else {
-          that.setData({
-            error: "网络错误，请稍后重试！"
-          });
-        }
-      },
-      fail: function (err) {
-        that.stopLoading();
-        that.setData({
-          error: "网络错误，请稍后重试！"
-        });
+    var id = e.currentTarget.dataset.id;
+    console.log('删除/完成', id);
+    var operType = e.detail.index ? "UPDATE" : "DELETE";
+
+    var todoList = this.data.todoList;
+    // 删除当前元素
+    var index = -1;
+    for (var i = 0; i < todoList.length; i++) {
+      if (todoList[i].id === id) {
+        index = i;
+        break;
       }
-    })
+    }
+    todoList.splice(index, 1);
+    this.setData({
+      todoList: todoList
+    });
+
+    // 同步到后台
+    app.send(operType, {
+      id: id,
+      openid: wx.getStorageSync('openid'),
+      status: 'FINISH'
+    });
   },
   /**
    * 编辑待办
@@ -101,12 +82,13 @@ Page({
    * @param {*} e 
    */
   edit(e) {
+    console.log('edit', e.currentTarget.dataset.id);
     this.setData({
       editId: e.currentTarget.dataset.id
     });
   },
   /**
-   * 新建/编辑待办事项
+   * 新建待办事项
    * 
    * @param {*} e 
    */
@@ -116,69 +98,73 @@ Page({
     }
     // 收起键盘
     wx.hideKeyboard();
-    let that = this;
-    if (that.data.isLoading) {
+
+    // 同步到后台
+    app.send("SAVE", {
+      openid: wx.getStorageSync('openid'),
+      type: "TODO",
+      content: e.detail.value
+    });
+
+    this.setData({
+      inputVal: ''
+    });
+    
+
+    app.send("SYNC");
+  },
+  /**
+   * 更新待办事项
+   * 
+   * @param {*} e 
+   */
+  updateTodo(e) {
+    var id = e.currentTarget.dataset.id;
+    console.log('update', e.detail.value);
+    if (!e.detail.value) {
       return;
     }
-    this.setData({editId: 0});
-    that.startLoading();
-    wx.request({
-      method: e.currentTarget.dataset.id ? "PUT" : "POST",
-      url: app.apiUrl + "/note",
-      data: {
-        id: e.currentTarget.dataset.id,
-        openid: wx.getStorageSync('openid'),
-        type: 'TODO',
-        content: e.detail.value
-      },
-      success: function (res) {
-        that.stopLoading();
-        if (res.data.respCo == '0000') {
-          that.setData({
-            inputVal: ''
-          });
-          if (res.data.data.note) {
-            var todoList = that.data.todoList;
-            todoList.unshift(res.data.data.note);
-            that.setData({
-              todoList: todoList
-            });
-          } else {
-            var todoList = that.data.todoList;
-            for (var i = 0; i < todoList.length; i++) {
-              if (todoList[i].id === e.currentTarget.dataset.id) {
-                todoList[i].content = e.detail.value;
-                break;
-              }
-            }
-            that.setData({
-              todoList: todoList
-            });
-          }
-        } else {
-          that.setData({
-            error: "网络错误，请稍后重试！"
-          });
-        }
-      },
-      fail: function (err) {
-        that.stopLoading();
-        that.setData({
-          error: "网络错误，请稍后重试！"
-        });
+    // 收起键盘
+    wx.hideKeyboard();
+
+    var todoList = this.data.todoList;
+    // 更新当前元素
+    for (var i = 0; i < todoList.length; i++) {
+      if (todoList[i].id === id) {
+        todoList[i].content = e.detail.value;
+        break;
       }
-    })
+    }
+    this.setData({
+      editId: 0,
+      todoList: todoList
+    });
+
+    // 同步到后台
+    app.send("UPDATE", {
+      id: id,
+      openid: wx.getStorageSync('openid'),
+      content: e.detail.value
+    });
+
   },
+
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function () {
+    this.startLoading();
+    app.send("SYNC");
+  },
+
   /**
    * 开始加载
    */
   startLoading() {
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
-    this.setData({
-      isLoading: true
-    });
   },
+
   /**
    * 停止加载中
    */
@@ -187,62 +173,25 @@ Page({
     wx.hideNavigationBarLoading();
     // 停止下拉动作
     wx.stopPullDownRefresh();
-    this.setData({
-      isLoading: false
-    });
-  },
-  /**
-   * 刷新todo列表
-   */
-  refresh() {
-    if (this.data.isLoading) {
-      wx.stopPullDownRefresh();
-      return;
-    }
-    this.startLoading();
-    let that = this;
-    wx.request({
-      method: "GET",
-      url: app.apiUrl + "/note?openid=" + wx.getStorageSync('openid'),
-      success: function (res) {
-        that.stopLoading();
-        if (res.data.respCo == '0000') {
-          var todoList = [];
-          for (var i = 0; i < res.data.data.notes.length; i++) {
-            if (res.data.data.notes[i].type === 'TODO') {
-              todoList.push(res.data.data.notes[i]);
-            }
-          }
-          that.setData({
-            todoList: todoList,
-            inputVal: '',
-            editId: 0
-          });
-        } else {
-          that.setData({
-            error: "网络错误，请稍后重试！"
-          });
-        }
-      },
-      fail: function (err) {
-        that.stopLoading();
-        that.setData({
-          error: "网络错误，请稍后重试！"
-        });
-      }
-    })
-  },
-  /**
-   * 下拉刷新
-   */
-  onPullDownRefresh: function () {
-    this.refresh();
   },
 
   /**
    * 初始化
    */
   onLoad: function () {
-    this.refresh();
+    app.event.on('sync', this.syncEvent, this);
+  },
+
+  /**
+   * 同步事件
+   * 
+   * @param {*} todos 
+   */
+  syncEvent: function (todos) {
+    console.log('sync event', todos.length);
+    this.setData({
+      todoList: todos
+    });
+    this.stopLoading();
   }
 })
