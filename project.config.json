@@ -4,7 +4,7 @@
     "ignore": []
   },
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": true,
     "enhance": false,
     "postcss": true,
@@ -39,8 +39,8 @@
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.0.4",
-  "appid": "wx9fc501a7c30dee34",
+  "libVersion": "2.14.0",
+  "appid": "wxdb36a62bbe2a76f5",
   "projectname": "Todo",
   "debugOptions": {
     "hidedInDevtools": []

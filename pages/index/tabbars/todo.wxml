@@ -1,0 +1,15 @@
+<view>
+  <input class="input" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
+  <scroll-view wx:if="{{ todoList.length }}" class="todo-list">
+    <mp-slideview wx:for="{{ todoList }}" wx:for-item="todo" wx:key="index" buttons="{{slideButtons}}"
+      bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
+      <mp-cell wx:if="{{ editId !== todo.id }}" value="{{ todo.content }}" footer="{{ util.dateFormat(todo.date) }}"
+        data-id="{{todo.id}}" bindtap="edit"></mp-cell>
+      <input wx:else data-id="{{todo.id}}" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
+        bindconfirm="addTodo" bindblur="addTodo" />
+    </mp-slideview>
+  </scroll-view>
+  <view wx:else class="empty-list">
+    暂无数据
+  </view>
+</view>
