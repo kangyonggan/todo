@@ -59,7 +59,7 @@ Page({
     }
     that.startLoading();
     wx.request({
-      method: !!e.detail.index ? "PUT" : "DELETE",
+      method: e.detail.index ? "PUT" : "DELETE",
       url: app.apiUrl + "/note",
       data: {
         id: e.currentTarget.dataset.id,
