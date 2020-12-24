@@ -5,7 +5,7 @@
       bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
       <mp-cell wx:if="{{ editId !== todo.id }}" value="{{ todo.content }}" footer="{{ util.dateFormat(todo.date) }}"
         data-id="{{todo.id}}" bindtap="edit"></mp-cell>
-      <input wx:else data-id="{{todo.id}}" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
+      <input wx:else data-id="{{todo.id}}" focus="{{editId === todo.id}}" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
         bindconfirm="addTodo" bindblur="addTodo" />
     </mp-slideview>
   </scroll-view>

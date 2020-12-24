@@ -8,6 +8,5 @@
     <include wx:if="{{tabIndex === 3}}" src="tabbars/about.wxml" />
   </view>
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
-  <mp-loading class="loading" wx:if="{{isLoading}}" type="circle"></mp-loading>
   <mp-tabbar class="tabbar" list="{{tabbars}}" bindchange="tabChange"></mp-tabbar>
 </view>

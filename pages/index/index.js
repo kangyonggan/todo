@@ -120,6 +120,7 @@ Page({
     if (that.data.isLoading) {
       return;
     }
+    this.setData({editId: 0});
     that.startLoading();
     wx.request({
       method: e.currentTarget.dataset.id ? "PUT" : "POST",
@@ -134,8 +135,7 @@ Page({
         that.stopLoading();
         if (res.data.respCo == '0000') {
           that.setData({
-            inputVal: '',
-            editId: 0
+            inputVal: ''
           });
           if (res.data.data.note) {
             var todoList = that.data.todoList;

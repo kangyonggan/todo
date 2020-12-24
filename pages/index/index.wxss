@@ -17,7 +17,7 @@
 }
 
 .weui-cell__bd {
-  font-size: 35rpx;
+  font-size: 30rpx;
   color: #595959;
 }
 
