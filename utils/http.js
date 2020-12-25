@@ -71,8 +71,8 @@ function request(method, url, data, resolve, reject) {
         reject(res.data.respMsg);
       }
     },
-    fail: function (e) {
-      reject(e.errMsg);
+    fail: function () {
+      reject('网络不稳定，请稍后再试！');
     }
   })
 }
