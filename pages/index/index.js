@@ -196,13 +196,24 @@ Page({
     var todos = this.data.todos;
     var todo = Util.getById(todos, id);
     if (todo.content === e.detail.value) {
-      // 没有内容改变
+      // 本次没有内容改变
       return;
     }
 
-    // 内容暂存
-    todo.content = e.detail.value;
-    todo.pause = true;
+    if (todo.originContent === e.detail.value) {
+      // 内容复原
+      todo.pause = false;
+      todo.content = todo.originContent;
+      todo.originContent = '';
+    } else {
+      // 内容暂存
+      if (!todo.pause) {
+        // 已暂存的，不必再记录最初内容
+        todo.originContent = todo.content;
+      }
+      todo.pause = true;
+      todo.content = e.detail.value;
+    }
     this.setData({
       todos: Util.updateById(todos, todo)
     });
