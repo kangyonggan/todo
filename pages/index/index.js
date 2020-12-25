@@ -1,12 +1,18 @@
 //index.js
+
 //获取应用实例
 const app = getApp()
+var Util = require('../../utils/util');
+var Http = require('../../utils/http');
 
 Page({
   /**
    * 数据
    */
   data: {
+    /**
+     * 底部工具栏
+     */
     tabbars: [{
         "text": "待办",
         "iconPath": "../../../images/todo.png",
@@ -28,16 +34,34 @@ Page({
         "selectedIconPath": "../../../images/about-selected.png"
       }
     ],
+    /**
+     * 当前tab
+     */
     tabIndex: 0,
+    /**
+     * 左滑按钮组
+     */
     slideButtons: [{
       type: 'warn',
       text: '删除'
     }, {
       text: '完成'
     }],
-    todoList: wx.getStorageSync("todos") || [],
+    /**
+     * 待办列表
+     */
+    todos: [],
+    /**
+     * 当前编辑的ID
+     */
     editId: 0,
+    /**
+     * 新建输入框的值
+     */
     inputVal: '',
+    /**
+     * 错误信息
+     */
     error: ''
   },
   /**
@@ -48,33 +72,35 @@ Page({
       tabIndex: e.detail.index
     });
   },
+
   /**
    * 删除/完成
    */
   slideButtonTap(e) {
     var id = e.currentTarget.dataset.id;
-    console.log('删除/完成', id);
-    var operType = e.detail.index ? "UPDATE" : "DELETE";
 
-    var todoList = this.data.todoList;
-    // 删除当前元素
-    var index = -1;
-    for (var i = 0; i < todoList.length; i++) {
-      if (todoList[i].id === id) {
-        index = i;
-        break;
-      }
+    if (e.detail.index) {
+      // 完成
+      Http.put("note", {
+        id: id,
+        openid: app.openid,
+        status: "FINISH"
+      }).catch(respMsg => {
+        this.errorEvent(respMsg);
+      });
+    } else {
+      // 删除
+      Http.delete("note", {
+        id: id,
+        openid: app.openid
+      }).catch(respMsg => {
+        this.errorEvent(respMsg);
+      });
     }
-    todoList.splice(index, 1);
-    this.setData({
-      todoList: todoList
-    });
 
-    // 同步到后台
-    app.send(operType, {
-      id: id,
-      openid: wx.getStorageSync('openid'),
-      status: 'FINISH'
+    // 刷新列表
+    this.setData({
+      todos: Util.removeById(this.data.todos, id)
     });
   },
   /**
@@ -83,7 +109,6 @@ Page({
    * @param {*} e 
    */
   edit(e) {
-    console.log('edit', e.currentTarget.dataset.id);
     this.setData({
       editId: e.currentTarget.dataset.id
     });
@@ -94,25 +119,30 @@ Page({
    * @param {*} e 
    */
   addTodo(e) {
+    // 内容不能为空
     if (!e.detail.value) {
       return;
     }
     // 收起键盘
     wx.hideKeyboard();
 
-    // 同步到后台
-    app.send("SAVE", {
-      openid: wx.getStorageSync('openid'),
+    // 发送请求
+    Http.post("note", {
+      openid: app.openid,
       type: "TODO",
       content: e.detail.value
+    }).then(data => {
+      // 插入到第一行
+      var todos = this.data.todos;
+      todos.unshift(data.note);
+      this.setData({
+        todos: todos,
+        // 清空内容
+        inputVal: ''
+      });
+    }).catch(respMsg => {
+      this.errorEvent(respMsg);
     });
-
-    this.setData({
-      inputVal: ''
-    });
-    
-
-    app.send("SYNC");
   },
   /**
    * 更新待办事项
@@ -121,33 +151,61 @@ Page({
    */
   updateTodo(e) {
     var id = e.currentTarget.dataset.id;
-    console.log('update', e.detail.value);
+    // 内容不能为空
     if (!e.detail.value) {
       return;
     }
     // 收起键盘
     wx.hideKeyboard();
 
-    var todoList = this.data.todoList;
-    // 更新当前元素
-    for (var i = 0; i < todoList.length; i++) {
-      if (todoList[i].id === id) {
-        todoList[i].content = e.detail.value;
-        break;
-      }
-    }
+    var todos = this.data.todos;
     this.setData({
       editId: 0,
-      todoList: todoList
+      todos: Util.updateById(todos, {
+        id: id,
+        content: e.detail.value
+      })
     });
 
-    // 同步到后台
-    app.send("UPDATE", {
+    // 更新
+    Http.put("note", {
       id: id,
-      openid: wx.getStorageSync('openid'),
+      openid: app.openid,
       content: e.detail.value
+    }).catch(respMsg => {
+      this.errorEvent(respMsg);
     });
 
+  },
+
+  /**
+   * 暂存待办
+   * 
+   * @param {*} e 
+   */
+  pauseTodo(e) {
+    var id = e.currentTarget.dataset.id;
+
+    // 防止误关
+    if (this.data.editId === id) {
+      this.setData({
+        editId: 0
+      });
+    }
+
+    var todos = this.data.todos;
+    var todo = Util.getById(todos, id);
+    if (todo.content === e.detail.value) {
+      // 没有内容改变
+      return;
+    }
+
+    // 内容暂存
+    todo.content = e.detail.value;
+    todo.pause = true;
+    this.setData({
+      todos: Util.updateById(todos, todo)
+    });
   },
 
   /**
@@ -155,7 +213,7 @@ Page({
    */
   onPullDownRefresh: function () {
     this.startLoading();
-    app.send("SYNC");
+    this.pullEvent();
   },
 
   /**
@@ -180,21 +238,28 @@ Page({
    * 初始化
    */
   onLoad: function () {
-    app.event.on('sync', this.syncEvent, this);
+    app.event.on('pull', this.pullEvent, this);
     app.event.on('error', this.errorEvent, this);
+    this.pullEvent();
   },
 
   /**
-   * 同步事件
-   * 
-   * @param {*} todos 
+   * 拉取事件
    */
-  syncEvent: function (todos) {
-    console.log('syncEvent', todos.length);
-    this.setData({
-      todoList: todos
+  pullEvent: function () {
+    let that = this;
+    Http.get("note", {
+      openid: app.openid
+    }).then(data => {
+      this.setData({
+        // 刷新待办列表
+        todos: Util.getByType(data.notes, "TODO")
+      });
+    }).catch(respMsg => {
+      that.errorEvent(respMsg);
+    }).finally(function () {
+      that.stopLoading();
     });
-    this.stopLoading();
   },
 
   /**
@@ -203,7 +268,6 @@ Page({
    * @param {*} msg 
    */
   errorEvent: function (msg) {
-    console.log('errorEvent', msg);
     this.setData({
       error: msg
     });

@@ -16,6 +16,11 @@
   border-bottom: 1px solid #f5f5f5;
 }
 
+.weui-cell__icon, .weui-cell__hd {
+  width: 40rpx;
+  height: 40rpx;
+}
+
 .weui-cell__bd {
   font-size: 30rpx;
   color: #595959;
@@ -32,7 +37,7 @@
   border-radius: 4px;
   border: 1px solid #dcdfe6;
   color: #606266;
-  font-size: inherit;
+  font-size: 30rpx;
   height: 75rpx;
   line-height: 75rpx;
   outline: 0;

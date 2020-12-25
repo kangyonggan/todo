@@ -1,12 +1,12 @@
 <view>
   <input class="input" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
-  <scroll-view wx:if="{{ todoList.length }}" class="todo-list">
-    <mp-slideview wx:for="{{ todoList }}" wx:for-item="todo" wx:key="index" buttons="{{slideButtons}}"
+  <scroll-view wx:if="{{ todos.length }}" class="todo-list">
+    <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" wx:key="index" buttons="{{slideButtons}}"
       bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
-      <mp-cell wx:if="{{ editId !== todo.id }}" value="{{ todo.content }}" footer="{{ util.dateFormat(todo.date) }}"
+      <mp-cell icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}" value="{{ todo.content }}" footer="{{ util.dateFormat(todo.date) }}"
         data-id="{{todo.id}}" bindtap="edit"></mp-cell>
       <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
-        bindconfirm="updateTodo" bindblur="updateTodo"/>
+        bindconfirm="updateTodo" bindblur="pauseTodo"/>
     </mp-slideview>
   </scroll-view>
   <view wx:else class="empty-list">

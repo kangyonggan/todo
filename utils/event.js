@@ -1,67 +1,60 @@
-// event.js
 
 class Event {
 
-  /**
-   * on 方法把订阅者所想要订阅的事件及相应的回调函数记录在 Event 对象的 _cbs 属性中
-   */
-  on(event, fn) {
+  on(event, fn, ctx) {
     if (typeof fn != "function") {
       console.error('fn must be a function')
       return
     }
 
-    this._cbs = this._cbs || {};
-    (this._cbs[event] = this._cbs[event] || []).push(fn)
+    this._stores = this._stores || {}
+
+    ;
+    (this._stores[event] = this._stores[event] || []).push({
+      cb: fn,
+      ctx: ctx
+    })
   }
 
-
-  /**
-   * emit 方法接受一个事件名称参数，在 Event 对象的 _cbs 属性中取出对应的数组，并逐个执行里面的回调函数
-   */
   emit(event) {
-    this._cbs = this._cbs || {}
-    var callbacks = this._cbs[event],
+    this._stores = this._stores || {}
+    var store = this._stores[event],
       args
 
-    if (callbacks) {
-      callbacks = callbacks.slice(0)
+    if (store) {
+      store = store.slice(0)
       args = [].slice.call(arguments, 1)
-      for (var i = 0, len = callbacks.length; i < len; i++) {
-        callbacks[i].apply(null, args)
+      for (var i = 0, len = store.length; i < len; i++) {
+        store[i].cb.apply(store[i].ctx, args)
       }
     }
   }
 
-
-
-  /**
-   * off 方法接受事件名称和当初注册的回调函数作参数，在 Event 对象的 _cbs 属性中删除对应的回调函数。
-   */
   off(event, fn) {
-    this._cbs = this._cbs || {}
+    this._stores = this._stores || {}
 
     // all
     if (!arguments.length) {
-      this._cbs = {}
+      this._stores = {}
       return
     }
 
-    var callbacks = this._cbs[event]
-    if (!callbacks) return
+    // specific event
+    var store = this._stores[event]
+    if (!store) return
 
     // remove all handlers
     if (arguments.length === 1) {
-      delete this._cbs[event]
+      delete this._stores[event]
       return
     }
 
     // remove specific handler
     var cb
-    for (var i = 0, len = callbacks.length; i < len; i++) {
-      cb = callbacks[i]
-      if (cb === fn || cb.fn === fn) {
-        callbacks.splice(i, 1)
+    for (var i = 0, len = store.length; i < len; i++) {
+      cb = store[i].cb
+      if (cb === fn) {
+        store.splice(i, 1)
         break
       }
     }
@@ -69,4 +62,10 @@ class Event {
   }
 }
 
-export default new Event();
+function newEvent() {
+  return new Event();
+}
+
+module.exports = {
+  newEvent: newEvent
+};
