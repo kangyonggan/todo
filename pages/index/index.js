@@ -136,7 +136,7 @@ Page({
     });
 
     // 更新
-    Http.put("note11", {
+    Http.put("note", {
       id: id,
       openid: app.openid,
       content: e.detail.value
