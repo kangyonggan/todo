@@ -62,7 +62,11 @@ Page({
     /**
      * 错误信息
      */
-    error: ''
+    error: '',
+    /**
+     * 加载中
+     */
+    isLoading: false
   },
   /**
    * 切换底部导航
@@ -245,6 +249,9 @@ Page({
    * 下拉刷新
    */
   onPullDownRefresh: function () {
+    if (this.data.isLoading) {
+      return;
+    }
     this.startLoading();
     this.pullEvent();
   },
@@ -253,6 +260,7 @@ Page({
    * 开始加载
    */
   startLoading() {
+    this.setData({isLoading: true});
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
   },
@@ -261,6 +269,7 @@ Page({
    * 停止加载中
    */
   stopLoading() {
+    this.setData({isLoading: false});
     // 隐藏导航栏加载框
     wx.hideNavigationBarLoading();
     // 停止下拉动作
@@ -278,8 +287,14 @@ Page({
 
   /**
    * 拉取事件
+   * 
+   * @param checkEmpty true：检查todos是不是为空，只有为空才拉取
    */
-  pullEvent: function () {
+  pullEvent: function (checkEmpty) {
+    if (checkEmpty && this.data.todos.length) {
+      return;
+    }
+
     let that = this;
     Http.get("note", {
       openid: app.openid

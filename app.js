@@ -18,7 +18,7 @@ App({
           Http.get('note/getOpenid?code=' + res.code).then(data => {
             wx.setStorageSync('openid', data.openid);
             this.openid = data.openid;
-            this.event.emit('pull');
+            this.event.emit('pull', true);
           }).catch(respMsg => {
             this.event.emit('error', respMsg);
           });
