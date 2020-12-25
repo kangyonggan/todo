@@ -159,8 +159,8 @@ Page({
     wx.hideKeyboard();
 
     var todos = this.data.todos;
+    var todo = Util.getById(todos, id);
     this.setData({
-      editId: 0,
       todos: Util.updateById(todos, {
         id: id,
         content: e.detail.value
@@ -168,12 +168,34 @@ Page({
     });
 
     // 更新
-    Http.put("note", {
+    Http.put("note11", {
       id: id,
       openid: app.openid,
       content: e.detail.value
+    }).then(data => {
+      this.setData({
+        editId: 0
+      });
     }).catch(respMsg => {
       this.errorEvent(respMsg);
+      if (todo.originContent === e.detail.value) {
+        // 内容复原
+        todo.pause = false;
+        todo.content = todo.originContent;
+        todo.originContent = '';
+      } else {
+        // 内容暂存
+        if (!todo.pause) {
+          // 已暂存的，不必再记录最初内容
+          todo.originContent = todo.content;
+        }
+        todo.pause = true;
+        todo.content = e.detail.value;
+      }
+      Util.updateById(todos, todo);
+      this.setData({
+        todos: todos
+      });
     });
 
   },
