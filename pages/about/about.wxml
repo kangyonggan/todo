@@ -1,0 +1,22 @@
+<!--pages/about/about.wxml-->
+<view>
+  <view class="header">
+    <view>
+      <image src="../../images/app.png"></image>
+    </view>
+    <view>
+      <view class="name">待办列表</view>
+      <view class="version">Version 1.1.5</view>
+    </view>
+  </view>
+
+  <view class="page__bd about">
+    <mp-cells>
+      <mp-cell value="姓名" footer="康永敢"></mp-cell>
+      <mp-cell value="公共号" footer="kyg0317"></mp-cell>
+      <mp-cell value="微信号" footer="kangyonggan0317"></mp-cell>
+      <mp-cell value="电子邮箱" footer="java@kangyonggan.com"></mp-cell>
+      <mp-cell value="个人网站" footer="https://kangyonggan.com"></mp-cell>
+    </mp-cells>
+  </view>
+</view>

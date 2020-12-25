@@ -11,34 +11,6 @@ Page({
    */
   data: {
     /**
-     * 底部工具栏
-     */
-    tabbars: [{
-        "text": "待办",
-        "iconPath": "../../../images/todo.png",
-        "selectedIconPath": "../../../images/todo-selected.png"
-      },
-      {
-        "text": "笔记",
-        "iconPath": "../../../images/note.png",
-        "selectedIconPath": "../../../images/note-selected.png"
-      },
-      {
-        "text": "日程",
-        "iconPath": "../../../images/calendar.png",
-        "selectedIconPath": "../../../images/calendar-selected.png"
-      },
-      {
-        "text": "关于",
-        "iconPath": "../../../images/about.png",
-        "selectedIconPath": "../../../images/about-selected.png"
-      }
-    ],
-    /**
-     * 当前tab
-     */
-    tabIndex: 0,
-    /**
      * 左滑按钮组
      */
     slideButtons: [{
@@ -67,14 +39,6 @@ Page({
      * 加载中
      */
     isLoading: false
-  },
-  /**
-   * 切换底部导航
-   */
-  tabChange(e) {
-    this.setData({
-      tabIndex: e.detail.index
-    });
   },
 
   /**
@@ -201,7 +165,6 @@ Page({
         todos: todos
       });
     });
-
   },
 
   /**

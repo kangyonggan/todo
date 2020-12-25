@@ -1,17 +1,4 @@
 /**index.wxss**/
-.main {
-  margin-bottom: 70px;
-}
-
-.tabbar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  left: 0;
-  right: 0;
-  z-index: 998;
-}
-
 .weui-cell {
   border-bottom: 1px solid #f5f5f5;
 }
@@ -49,34 +36,8 @@
   margin-top: 20rpx;
 }
 
-.loading {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.weui-loadmore__tips {
-  color: #fff;
-}
-
-.wx_loading_view {
-  margin-top: 50%;
-}
-
 .empty-list {
   text-align: center;
   margin-top: 100rpx;
   color: #999;
-}
-
-.about {
-  margin: 160rpx 0 0 60rpx;
-}
-.about view {
-  line-height: 70rpx;
 }

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/about/about",
     "pages/index/index"
   ],
   "useExtendedLib": {
@@ -12,5 +13,18 @@
     "navigationBarTextStyle": "black"
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "list": [{
+      "selectedIconPath": "images/todo-selected.png",
+      "iconPath": "images/todo.png",
+      "pagePath": "pages/index/index",
+      "text": "待办"
+    }, {
+      "selectedIconPath": "images/about-selected.png",
+      "iconPath": "images/about.png",
+      "pagePath": "pages/about/about",
+      "text": "关于"
+    }]
+  }
 }

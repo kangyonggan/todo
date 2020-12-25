@@ -1,0 +1,25 @@
+/* pages/about/about.wxss */
+
+.header {
+  text-align: center;
+}
+
+.header image {
+  width: 130rpx;
+  height: 130rpx;
+}
+
+.header .name {
+  margin-top: 30rpx;
+  font-weight: bold;
+}
+
+.header .version {
+  font-size: 25rpx;
+  color: #595959;
+}
+
+.about {
+  clear: both;
+  margin-top: 100rpx;
+}

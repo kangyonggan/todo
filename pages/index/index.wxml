@@ -1,12 +1,21 @@
 <wxs module="util" src="../../utils/util.wxs"></wxs>
 
 <view>
-  <view class="main">
-    <include wx:if="{{tabIndex === 0}}" src="tabbars/todo.wxml" />
-    <include wx:if="{{tabIndex === 1}}" src="tabbars/note.wxml" />
-    <include wx:if="{{tabIndex === 2}}" src="tabbars/calendar.wxml" />
-    <include wx:if="{{tabIndex === 3}}" src="tabbars/about.wxml" />
+  <view>
+    <input class="input" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
+    <scroll-view wx:if="{{ todos.length }}" class="todo-list">
+      <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" wx:key="index" buttons="{{slideButtons}}"
+        bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
+        <mp-cell icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
+          value="{{ todo.content }}" footer="{{ util.dateFormat(todo.date) }}" data-id="{{todo.id}}" bindtap="edit">
+        </mp-cell>
+        <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
+          bindconfirm="updateTodo" bindblur="pauseTodo" />
+      </mp-slideview>
+    </scroll-view>
+    <view wx:else class="empty-list">
+      暂无数据
+    </view>
   </view>
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
-  <mp-tabbar class="tabbar" list="{{tabbars}}" bindchange="tabChange"></mp-tabbar>
 </view>
