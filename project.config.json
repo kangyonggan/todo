@@ -39,7 +39,7 @@
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.14.0",
+  "libVersion": "2.14.1",
   "appid": "wxdb36a62bbe2a76f5",
   "projectname": "Todo",
   "debugOptions": {
