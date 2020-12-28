@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/about/about",
-    "pages/index/filter/filter"
+    "pages/index/filter/filter",
+    "pages/note/note"
   ],
   "useExtendedLib": {
     "weui": true
@@ -22,6 +23,12 @@
         "iconPath": "images/todo.png",
         "pagePath": "pages/index/index",
         "text": "待办"
+      },
+      {
+        "selectedIconPath": "images/note-selected.png",
+        "iconPath": "images/note.png",
+        "pagePath": "pages/note/note",
+        "text": "日程"
       },
       {
         "selectedIconPath": "images/about-selected.png",

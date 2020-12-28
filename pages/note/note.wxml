@@ -1,9 +1,11 @@
+<!--pages/note/note.wxml-->
 <view>
+  <calendar id="calendar" config="{{calendarConfig}}" bind:afterCalendarRender="afterCalendarRender"
+    bind:whenChangeMonth="whenChangeMonth" bind:takeoverTap="takeoverTap" />
   <view>
-    <input class="input search" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
-    <image src="{{ filters.containsFinish ? '../../images/filter-selected.png' : '../../images/filter.png' }}" class="filter" bindtap="openFilter" />
-    <scroll-view wx:if="{{ todos.length }}" class="todo-list">
-      <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
+    <input class="input search" placeholder="{{inputTips}}" bindconfirm="addTodo" value="{{inputVal}}" />
+    <scroll-view wx:if="{{ todays.length }}" class="todo-list">
+      <mp-slideview wx:for="{{ todays }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
         buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}" bindbuttontap="slideButtonTap"
         data-id="{{todo.id}}">
         <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} " icon="{{ todo.pause ? '../../../images/edit.png' : '' }}"
@@ -14,9 +16,6 @@
           bindconfirm="updateTodo" bindblur="pauseTodo" />
       </mp-slideview>
     </scroll-view>
-    <view wx:else class="empty-list">
-      暂无数据
-    </view>
   </view>
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
 </view>

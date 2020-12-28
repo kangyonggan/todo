@@ -1,13 +1,26 @@
-//index.js
+// pages/note/note.js
+// 引入插件安装器
+import plugin from '../../components/calendar/plugins/index'
+// 设置代办
+import todo from '../../components/calendar/plugins/todo'
+// 农历相关功能
+import solarLunar from '../../components/calendar/plugins/solarLunar/index'
+// 节假日
+import holidays from '../../components/calendar/plugins/holidays/index'
 
-//获取应用实例
+plugin
+  .use(todo)
+  .use(solarLunar)
+  .use(holidays);
+
 const app = getApp()
-var Util = require('../../utils/util');
 var Http = require('../../utils/http');
+var Util = require('../../utils/util');
 
 Page({
+
   /**
-   * 数据
+   * 页面的初始数据
    */
   data: {
     /**
@@ -35,10 +48,6 @@ Page({
       text: '恢复'
     }],
     /**
-     * 待办列表
-     */
-    todos: [],
-    /**
      * 当前编辑的ID
      */
     editId: 0,
@@ -46,45 +55,31 @@ Page({
      * 新建输入框的值
      */
     inputVal: '',
-    /**
-     * 错误信息
-     */
-    error: '',
-    /**
-     * 加载中
-     */
+    inputTips: '',
+    calendarConfig: {
+      theme: 'elegant',
+      showLunar: true,
+      emphasisWeek: true,
+      showHolidays: true,
+      showFestival: true,
+      highlightToday: false,
+      firstDayOfWeek: 'Mon',
+      takeoverTap: true,
+    },
+    calendar: undefined,
     isLoading: false,
+    todos: [],
+    error: '',
+    todays: []
+  },
+
     /**
-     * 筛选条件
-     */
-    filters: wx.getStorageSync('filters')
-  },
-
-  /**
-   * 打开筛选面板
-   */
-  openFilter() {
-    var that = this;
-    wx.navigateTo({
-      url: './filter/filter?containsFinish=' + this.data.filters.containsFinish,
-      events: {
-        onChange: function (data) {
-          var filters = that.data.filters;
-          filters = Object.assign({}, data);
-          that.setData({
-            filters: filters
-          });
-          wx.setStorageSync('filters', filters);
-        }
-      }
-    })
-  },
-
-  /**
    * 置顶/完成/恢复
    */
   slideButtonTap(e) {
     var id = e.currentTarget.dataset.id;
+    var day = this.data.calendar.getSelectedDates()[0];
+    day = day.year + '-' + day.month + '-' + day.date;
 
     if (e.detail.index) {
       // 完成
@@ -94,7 +89,7 @@ Page({
         isTopped: 0
       }).then(data => {
         // 拉取最新
-        this.pullEvent();
+        this.pullEvent(day);
       }).catch(respMsg => {
         this.errorEvent(respMsg);
       });
@@ -108,7 +103,7 @@ Page({
           isTopped: 0
         }).then(data => {
           // 拉取最新
-          this.pullEvent();
+          this.pullEvent(day);
         }).catch(respMsg => {
           this.errorEvent(respMsg);
         });
@@ -119,7 +114,7 @@ Page({
           isTopped: note.isTopped ? 0 : 1
         }).then(data => {
           // 拉取最新
-          this.pullEvent();
+          this.pullEvent(day);
         }).catch(respMsg => {
           this.errorEvent(respMsg);
         });
@@ -152,14 +147,17 @@ Page({
     }
     // 收起键盘
     wx.hideKeyboard();
+    var day = this.data.calendar.getSelectedDates()[0];
+    var dayStr = day.year + '-' + day.month + '-' + day.date;
 
     // 发送请求
     Http.post("note", {
       type: "TODO",
-      content: e.detail.value
+      content: e.detail.value,
+      day: day.year + '-' + (day.month < 10 ? '0' + day.month : day.month) + '-' + day.date
     }).then(data => {
       // 刷新列表
-      this.pullEvent();
+      this.pullEvent(dayStr);
       this.setData({
         // 清空内容
         inputVal: ''
@@ -182,10 +180,10 @@ Page({
     // 收起键盘
     wx.hideKeyboard();
 
-    var todos = this.data.todos;
-    var todo = Util.getById(todos, id);
+    var todays = this.data.todays;
+    var todo = Util.getById(todays, id);
     this.setData({
-      todos: Util.updateById(todos, {
+      todays: Util.updateById(todays, {
         id: id,
         content: e.detail.value
       })
@@ -215,9 +213,9 @@ Page({
         todo.pause = true;
         todo.content = e.detail.value;
       }
-      Util.updateById(todos, todo);
+      Util.updateById(todays, todo);
       this.setData({
-        todos: todos
+        todays: todays
       });
     });
   },
@@ -237,8 +235,8 @@ Page({
       });
     }
 
-    var todos = this.data.todos;
-    var todo = Util.getById(todos, id);
+    var todays = this.data.todays;
+    var todo = Util.getById(todays, id);
     if (todo.content === e.detail.value) {
       // 本次没有内容改变
       return;
@@ -259,19 +257,134 @@ Page({
       todo.content = e.detail.value;
     }
     this.setData({
-      todos: Util.updateById(todos, todo)
+      todays: Util.updateById(todays, todo)
     });
   },
 
   /**
-   * 下拉刷新
+   * 日历初次渲染完成后触发事件，如设置事件标记
    */
-  onPullDownRefresh: function () {
+  afterCalendarRender(e) {
+    this.setData({
+      calendar: this.selectComponent('#calendar').calendar
+    });
+    this.pullEvent();
+  },
+
+  /**
+   * 初始化待办
+   */
+  initTodos(day) {
+    var dates = [];
+    var todays = [];
+    for (let index = 0; index < this.data.todos.length; index++) {
+      var todo = this.data.todos[index];
+      if (day && todo.day === day) {
+        todays.push(todo);
+      }
+      if (todo.day) {
+        var arr = todo.day.split('-');
+        dates.push({
+          year: arr[0],
+          month: arr[1],
+          day: arr[2]
+        });
+      }
+    }
+    this.data.calendar.setTodos({
+      dotColor: '#f60', // 待办点标记颜色
+      dates: dates
+    })
+    if (day) {
+      this.setData({
+        todays: todays
+      });
+    }
+  },
+
+  /**
+   * 日期点击事件（此事件会完全接管点击事件），需自定义配置 takeoverTap 值为真才能生效
+   * currentSelect 当前点击的日期
+   */
+  takeoverTap(e) {
+    this.initDay(e.detail.year, e.detail.month, e.detail.date);
+  },
+
+  /**
+   * 初始化日期
+   * 
+   * @param {*} year 
+   * @param {*} month 
+   * @param {*} date 
+   */
+  initDay(year, month, date) {
+    this.data.calendar.cancelSelectedDates();
+    this.data.calendar.setSelectedDates([{
+      year: year,
+      month: month,
+      date: date
+    }])
+    this.initTodos(year + '-' + month + '-' + date);
+    this.setData({
+      inputTips: '添加' + year + '年' + month + '月' + date + '日' + '的待办事项'
+    });
+  },
+
+  /**
+   * 当改变月份时触发
+   * => current 当前年月 / next 切换后的年月
+   */
+  whenChangeMonth(e) {
+    this.initTodos()
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {},
+
+  /**
+   * 切换到当前tab
+   */
+  onTabItemTap() {
+    if (this.data.calendar) {
+      var day = this.data.calendar.getSelectedDates()[0];
+      this.pullEvent(day.year + '-' + day.month + '-' + day.date);
+    }
+  },
+
+  /**
+   * 拉取事件
+   */
+  pullEvent: function (date) {
     if (this.data.isLoading) {
       return;
     }
-    this.startLoading();
-    this.pullEvent();
+    this.setData({
+      isLoading: true
+    });
+
+    let that = this;
+    Http.get("note?type=TODO")
+      .then(data => {
+        this.setData({
+          // 刷新待办列表
+          todos: data.todos,
+          todays: []
+        });
+
+        if (date) {
+          var arr = date.split('-');
+          this.initDay(arr[0], arr[1], arr[2]);
+        } else {
+          var today = new Date();
+          this.initDay(today.getFullYear(), + (today.getMonth() + 1), + today.getDate());
+        }
+      }).catch(respMsg => {
+        that.errorEvent(respMsg);
+      }).finally(function () {
+        that.stopLoading();
+      });
   },
 
   /**
@@ -293,58 +406,6 @@ Page({
     wx.hideNavigationBarLoading();
     // 停止下拉动作
     wx.stopPullDownRefresh();
-  },
-
-  /**
-   * 切换到当前tab
-   */
-  onTabItemTap() {
-    this.pullEvent();
-  },
-
-  /**
-   * 初始化时
-   */
-  onLoad: function () {
-    app.event.on('pull', this.pullEvent, this);
-    app.event.on('error', this.errorEvent, this);
-    this.pullEvent();
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    if (this.data.filters.hasChanged) {
-      this.pullEvent();
-    }
-  },
-
-  /**
-   * 拉取事件
-   * 
-   * @param checkEmpty true：检查todos是不是为空，只有为空才拉取
-   */
-  pullEvent: function (checkEmpty) {
-    if ((checkEmpty && this.data.todos.length) || this.data.isLoading) {
-      return;
-    }
-    this.setData({
-      isLoading: true
-    });
-
-    let that = this;
-    Http.get("note?type=TODO&status=" + (this.data.filters.containsFinish ? '' : 'NORMAL'))
-      .then(data => {
-        this.setData({
-          // 刷新待办列表
-          todos: data.todos
-        });
-      }).catch(respMsg => {
-        that.errorEvent(respMsg);
-      }).finally(function () {
-        that.stopLoading();
-      });
   },
 
   /**

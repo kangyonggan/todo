@@ -1,4 +1,4 @@
-/**index.wxss**/
+/* pages/note/note.wxss */
 .weui-cell {
   border-bottom: 1px solid #f5f5f5;
 }
@@ -49,34 +49,14 @@
 
 .search {
   background: white;
-  position: fixed;
   padding: 0 30rpx;
-  top: 0;
-  left: 0;
-  right: 100rpx;
   width: auto;
-  z-index: 999;
-  margin-top: 0;
-}
-
-.filter {
-  position: fixed;
-  top: 6rpx;
-  right: 20rpx;
-  width: 70rpx;
-  height: 70rpx;
-  z-index: 999;
-  background: white;
-}
-
-.empty-list {
-  text-align: center;
-  margin-top: 100rpx;
-  color: #999;
+  margin-top: 20rpx;
+  width: 83%;
 }
 
 .todo-list {
-  margin-top: 90rpx;
+  margin-top: 10rpx;
 }
 
 .todo-list .topped .weui-cell view {
