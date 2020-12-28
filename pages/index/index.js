@@ -29,6 +29,12 @@ Page({
       text: '完成'
     }],
     /**
+     * 左滑按钮组（恢复）
+     */
+    slideButtonsRecovery: [{
+      text: '恢复'
+    }],
+    /**
      * 待办列表
      */
     todos: [],
@@ -47,15 +53,38 @@ Page({
     /**
      * 加载中
      */
-    isLoading: false
+    isLoading: false,
+    /**
+     * 筛选条件
+     */
+    filters: wx.getStorageSync('filters')
   },
 
   /**
-   * 置顶/完成
+   * 打开筛选面板
+   */
+  openFilter() {
+    var that = this;
+    wx.navigateTo({
+      url: './filter/filter?containsFinish=' + this.data.filters.containsFinish,
+      events: {
+        onChange: function (data) {
+          var filters = that.data.filters;
+          filters = Object.assign({}, data);
+          that.setData({
+            filters: filters
+          });
+          wx.setStorageSync('filters', filters);
+        }
+      }
+    })
+  },
+
+  /**
+   * 置顶/完成/恢复
    */
   slideButtonTap(e) {
     var id = e.currentTarget.dataset.id;
-    console.log(id);
 
     if (e.detail.index) {
       // 完成
@@ -63,27 +92,39 @@ Page({
         id: id,
         openid: app.openid,
         status: "FINISH"
+      }).then(data => {
+        // 拉取最新
+        this.pullEvent();
       }).catch(respMsg => {
         this.errorEvent(respMsg);
-      });
-
-      // 删除元素
-      this.setData({
-        todos: Util.removeById(this.data.todos, id)
       });
     } else {
-      // 置顶
       var note = Util.getById(this.data.todos, id);
-      Http.put("note", {
-        id: id,
-        openid: app.openid,
-        isTopped: note.isTopped ? 0 : 1
-      }).catch(respMsg => {
-        this.errorEvent(respMsg);
-      });
-
-      // 拉取最新
-      this.pullEvent();
+      if (note.status === 'FINISH') {
+        // 恢复
+        Http.put("note", {
+          id: id,
+          openid: app.openid,
+          status: 'NORMAL'
+        }).then(data => {
+          // 拉取最新
+          this.pullEvent();
+        }).catch(respMsg => {
+          this.errorEvent(respMsg);
+        });
+      } else {
+        // 置顶
+        Http.put("note", {
+          id: id,
+          openid: app.openid,
+          isTopped: note.isTopped ? 0 : 1
+        }).then(data => {
+          // 拉取最新
+          this.pullEvent();
+        }).catch(respMsg => {
+          this.errorEvent(respMsg);
+        });
+      }
     }
   },
   /**
@@ -242,9 +283,6 @@ Page({
    * 开始加载
    */
   startLoading() {
-    this.setData({
-      isLoading: true
-    });
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
   },
@@ -270,6 +308,14 @@ Page({
     app.event.on('error', this.errorEvent, this);
     this.pullEvent();
   },
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    if (this.data.filters.hasChanged) {
+      this.pullEvent();
+    }
+  },
 
   /**
    * 拉取事件
@@ -277,23 +323,23 @@ Page({
    * @param checkEmpty true：检查todos是不是为空，只有为空才拉取
    */
   pullEvent: function (checkEmpty) {
-    if (checkEmpty && this.data.todos.length) {
+    if ((checkEmpty && this.data.todos.length) || this.data.isLoading) {
       return;
     }
+    this.setData({isLoading: true});
 
     let that = this;
-    Http.get("note", {
-      openid: app.openid
-    }).then(data => {
-      this.setData({
-        // 刷新待办列表
-        todos: Util.getByType(data.notes, "TODO")
+    Http.get("note?openid=" + app.openid + '&status=' + (this.data.filters.containsFinish ? '' : 'NORMAL'))
+      .then(data => {
+        this.setData({
+          // 刷新待办列表
+          todos: Util.getByType(data.notes, "TODO")
+        });
+      }).catch(respMsg => {
+        that.errorEvent(respMsg);
+      }).finally(function () {
+        that.stopLoading();
       });
-    }).catch(respMsg => {
-      that.errorEvent(respMsg);
-    }).finally(function () {
-      that.stopLoading();
-    });
   },
 
   /**

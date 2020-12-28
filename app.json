@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/about/about"
+    "pages/about/about",
+    "pages/index/filter/filter"
   ],
   "useExtendedLib": {
     "weui": true
@@ -15,16 +16,19 @@
   "style": "v2",
   "sitemapLocation": "sitemap.json",
   "tabBar": {
-    "list": [{
-      "selectedIconPath": "images/todo-selected.png",
-      "iconPath": "images/todo.png",
-      "pagePath": "pages/index/index",
-      "text": "待办"
-    }, {
-      "selectedIconPath": "images/about-selected.png",
-      "iconPath": "images/about.png",
-      "pagePath": "pages/about/about",
-      "text": "关于"
-    }]
+    "list": [
+      {
+        "selectedIconPath": "images/todo-selected.png",
+        "iconPath": "images/todo.png",
+        "pagePath": "pages/index/index",
+        "text": "待办"
+      },
+      {
+        "selectedIconPath": "images/about-selected.png",
+        "iconPath": "images/about.png",
+        "pagePath": "pages/about/about",
+        "text": "关于"
+      }
+    ]
   }
 }

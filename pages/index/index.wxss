@@ -20,7 +20,7 @@
 
 .weui-cell__bd {
   font-size: 30rpx;
-  color: #595959;
+  color: #606060;
 }
 
 .weui-cell__ft {
@@ -53,9 +53,20 @@
   padding: 0 30rpx;
   top: 0;
   left: 0;
-  right: 0;
+  right: 100rpx;
+  width: auto;
   z-index: 999;
   margin-top: 0;
+}
+
+.filter {
+  position: fixed;
+  top: 6rpx;
+  right: 20rpx;
+  width: 70rpx;
+  height: 70rpx;
+  z-index: 999;
+  background: white;
 }
 
 .empty-list {
@@ -70,4 +81,9 @@
 
 .todo-list .topped .weui-cell view {
   color: #000 !important;
+}
+
+.todo-list .finish .weui-cell view {
+  text-decoration-line: line-through;
+  color: #ccc !important;
 }
