@@ -90,7 +90,6 @@ Page({
       // 完成
       Http.put("note", {
         id: id,
-        openid: app.openid,
         status: "FINISH"
       }).then(data => {
         // 拉取最新
@@ -104,7 +103,6 @@ Page({
         // 恢复
         Http.put("note", {
           id: id,
-          openid: app.openid,
           status: 'NORMAL'
         }).then(data => {
           // 拉取最新
@@ -116,7 +114,6 @@ Page({
         // 置顶
         Http.put("note", {
           id: id,
-          openid: app.openid,
           isTopped: note.isTopped ? 0 : 1
         }).then(data => {
           // 拉取最新
@@ -156,15 +153,12 @@ Page({
 
     // 发送请求
     Http.post("note", {
-      openid: app.openid,
       type: "TODO",
       content: e.detail.value
     }).then(data => {
-      // 插入到第一行
-      var todos = this.data.todos;
-      todos.unshift(data.note);
+      // 刷新列表
+      this.pullEvent();
       this.setData({
-        todos: todos,
         // 清空内容
         inputVal: ''
       });
@@ -198,7 +192,6 @@ Page({
     // 更新
     Http.put("note", {
       id: id,
-      openid: app.openid,
       content: e.detail.value
     }).then(data => {
       this.setData({
@@ -329,7 +322,7 @@ Page({
     this.setData({isLoading: true});
 
     let that = this;
-    Http.get("note?openid=" + app.openid + '&status=' + (this.data.filters.containsFinish ? '' : 'NORMAL'))
+    Http.get("note?status=" + (this.data.filters.containsFinish ? '' : 'NORMAL'))
       .then(data => {
         this.setData({
           // 刷新待办列表

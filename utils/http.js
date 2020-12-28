@@ -64,6 +64,9 @@ function request(method, url, data, resolve, reject) {
     url: BASE_URL + url,
     data: data,
     timeout: TIMEOUT * 1000,
+    header: {
+      'openid': getApp().openid
+    },
     success(res) {
       if (res.data.respCo == '0000') {
         resolve(res.data.data);
