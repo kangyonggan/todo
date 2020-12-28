@@ -20,11 +20,6 @@
 }
 
 .input {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
   display: inline-block;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
@@ -33,12 +28,24 @@
   height: 75rpx;
   line-height: 75rpx;
   outline: 0;
-  padding: 0 15px;
+  padding: 0 38rpx;
   -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 84%; 
   margin-left: 4%;
+  margin-top: 13rpx;
+  margin-bottom: 5rpx;
+}
+
+.search {
   background: white;
+  position: fixed;
+  padding: 0 30rpx;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  margin-top: 0;
 }
 
 .empty-list {

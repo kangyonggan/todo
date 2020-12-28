@@ -2,10 +2,10 @@
 
 <view>
   <view>
-    <input class="input" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
+    <input class="input search" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
     <scroll-view wx:if="{{ todos.length }}" class="todo-list">
-      <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" wx:key="index" buttons="{{slideButtons}}"
-        bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
+      <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}"
+        wx:key="index" buttons="{{slideButtons}}" bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
         <mp-cell icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
           value="{{ todo.content }}" footer="{{ util.dateFormat(todo.date) }}" data-id="{{todo.id}}" bindtap="edit">
         </mp-cell>

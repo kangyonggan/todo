@@ -46,6 +46,7 @@ Page({
    */
   slideButtonTap(e) {
     var id = e.currentTarget.dataset.id;
+    this.setData({sliderId: 0});
 
     if (e.detail.index) {
       // 完成
@@ -77,6 +78,10 @@ Page({
    * @param {*} e 
    */
   edit(e) {
+    if (this.data.sliderId) {
+      // 有左滑的时候不能编辑
+      return;
+    }
     this.setData({
       editId: e.currentTarget.dataset.id
     });
