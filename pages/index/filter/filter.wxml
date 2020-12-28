@@ -1,7 +1,7 @@
 <!--pages/index/filter/filter.wxml-->
 <view>
   <view class="page__bd">
-    <mp-cells title="筛选代表列表">
+    <mp-cells title="筛选待办列表">
       <mp-cell>
         <view>显示已完成</view>
         <view slot="footer">
