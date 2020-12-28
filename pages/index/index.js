@@ -11,11 +11,20 @@ Page({
    */
   data: {
     /**
-     * 左滑按钮组
+     * 左滑按钮组（置顶）
      */
     slideButtons: [{
       type: 'warn',
-      text: '删除'
+      text: '置顶'
+    }, {
+      text: '完成'
+    }],
+    /**
+     * 左滑按钮组（取消置顶）
+     */
+    slideButtonsTopped: [{
+      type: 'warn',
+      text: '取消置顶'
     }, {
       text: '完成'
     }],
@@ -42,11 +51,11 @@ Page({
   },
 
   /**
-   * 删除/完成
+   * 置顶/完成
    */
   slideButtonTap(e) {
     var id = e.currentTarget.dataset.id;
-    this.setData({sliderId: 0});
+    console.log(id);
 
     if (e.detail.index) {
       // 完成
@@ -57,20 +66,25 @@ Page({
       }).catch(respMsg => {
         this.errorEvent(respMsg);
       });
+
+      // 删除元素
+      this.setData({
+        todos: Util.removeById(this.data.todos, id)
+      });
     } else {
-      // 删除
-      Http.delete("note", {
+      // 置顶
+      var note = Util.getById(this.data.todos, id);
+      Http.put("note", {
         id: id,
-        openid: app.openid
+        openid: app.openid,
+        isTopped: note.isTopped ? 0 : 1
       }).catch(respMsg => {
         this.errorEvent(respMsg);
       });
-    }
 
-    // 刷新列表
-    this.setData({
-      todos: Util.removeById(this.data.todos, id)
-    });
+      // 拉取最新
+      this.pullEvent();
+    }
   },
   /**
    * 编辑待办
@@ -228,7 +242,9 @@ Page({
    * 开始加载
    */
   startLoading() {
-    this.setData({isLoading: true});
+    this.setData({
+      isLoading: true
+    });
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
   },
@@ -237,7 +253,9 @@ Page({
    * 停止加载中
    */
   stopLoading() {
-    this.setData({isLoading: false});
+    this.setData({
+      isLoading: false
+    });
     // 隐藏导航栏加载框
     wx.hideNavigationBarLoading();
     // 停止下拉动作
