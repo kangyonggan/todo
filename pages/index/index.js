@@ -90,7 +90,8 @@ Page({
       // 完成
       Http.put("note", {
         id: id,
-        status: "FINISH"
+        status: "FINISH",
+        isTopped: 0
       }).then(data => {
         // 拉取最新
         this.pullEvent();
@@ -103,7 +104,8 @@ Page({
         // 恢复
         Http.put("note", {
           id: id,
-          status: 'NORMAL'
+          status: 'NORMAL',
+          isTopped: 0
         }).then(data => {
           // 拉取最新
           this.pullEvent();
