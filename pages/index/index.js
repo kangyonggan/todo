@@ -39,10 +39,6 @@ Page({
      */
     todos: [],
     /**
-     * 当前编辑的ID
-     */
-    editId: 0,
-    /**
      * 新建输入框的值
      */
     inputVal: '',
@@ -126,20 +122,7 @@ Page({
       }
     }
   },
-  /**
-   * 编辑待办
-   * 
-   * @param {*} e 
-   */
-  edit(e) {
-    if (this.data.sliderId) {
-      // 有左滑的时候不能编辑
-      return;
-    }
-    this.setData({
-      editId: e.currentTarget.dataset.id
-    });
-  },
+
   /**
    * 新建待办事项
    * 

@@ -1,0 +1,18 @@
+<!--components/todo-list/todo-list.wxml-->
+<view>
+  <scroll-view wx:if="{{ todos.length }}" class="todo-list">
+    <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
+      buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}"
+      bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
+      <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
+        icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
+        value="{{ todo.content }}" footer="{{ todo.day }}" data-id="{{todo.id}}" bindtap="edit">
+      </mp-cell>
+      <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
+        bindconfirm="updateTodo" bindblur="pauseTodo" />
+    </mp-slideview>
+  </scroll-view>
+  <view wx:else class="empty-list">
+    暂无数据
+  </view>
+</view>

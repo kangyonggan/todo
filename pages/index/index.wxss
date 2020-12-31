@@ -68,26 +68,3 @@
   z-index: 999;
   background: white;
 }
-
-.empty-list {
-  text-align: center;
-  margin-top: 100rpx;
-  color: #999;
-}
-
-.todo-list {
-  margin-top: 90rpx;
-}
-
-.todo-list .topped .weui-cell view {
-  color: #000 !important;
-}
-
-.todo-list .topped .weui-cell .weui-cell__ft {
-  color: #777 !important;
-}
-
-.todo-list .finish .weui-cell view {
-  text-decoration-line: line-through;
-  color: #ccc !important;
-}
