@@ -3,19 +3,8 @@
   <calendar id="calendar" config="{{calendarConfig}}" bind:afterCalendarRender="afterCalendarRender"
     bind:whenChangeMonth="whenChangeMonth" bind:takeoverTap="takeoverTap" />
   <view>
-    <input class="input search" placeholder="{{inputTips}}" bindconfirm="addTodo" value="{{inputVal}}" />
-    <scroll-view wx:if="{{ todays.length }}" class="todo-list">
-      <mp-slideview wx:for="{{ todays }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
-        buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}" bindbuttontap="slideButtonTap"
-        data-id="{{todo.id}}">
-        <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} " icon="{{ todo.pause ? '../../../images/edit.png' : '' }}"
-          wx:if="{{ editId !== todo.id }}" value="{{ todo.content }}" footer="{{ todo.day }}"
-          data-id="{{todo.id}}" bindtap="edit">
-        </mp-cell>
-        <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
-          bindconfirm="updateTodo" bindblur="pauseTodo" />
-      </mp-slideview>
-    </scroll-view>
+    <input class="search" placeholder="{{inputTips}}" bindconfirm="addTodo" value="{{inputVal}}" />
+    <todo-list todos="{{todays}}"/>
   </view>
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
 </view>

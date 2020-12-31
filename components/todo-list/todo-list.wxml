@@ -1,6 +1,6 @@
 <!--components/todo-list/todo-list.wxml-->
-<view>
-  <scroll-view wx:if="{{ todos.length }}" class="todo-list">
+<view class="todos">
+  <scroll-view wx:if="{{ todos.length }}">
     <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
       buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}"
       bindbuttontap="slideButtonTap" data-id="{{todo.id}}">

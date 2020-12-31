@@ -1,9 +1,6 @@
 {
   "enablePullDownRefresh": true,
   "usingComponents": {
-    "mp-cells": "weui-miniprogram/cells/cells",
-    "mp-cell": "weui-miniprogram/cell/cell",
-    "mp-slideview": "weui-miniprogram/slideview/slideview",
     "mp-toptips": "weui-miniprogram/toptips/toptips",
     "todo-list": "../../components/todo-list/todo-list"
   }

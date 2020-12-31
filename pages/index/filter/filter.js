@@ -9,7 +9,8 @@ Page({
     /**
      * 显示已完成
      */
-    containsFinish: false
+    containsFinish: false,
+    oldContainsFinish: false
   },
 
   /**
@@ -21,7 +22,6 @@ Page({
     this.setData({
       containsFinish: e.detail.value
     });
-    this.data.eventChannel.emit('onChange', {containsFinish: e.detail.value, hasChanged: true});
   },
 
   /**
@@ -30,7 +30,8 @@ Page({
   onLoad: function (options) {
     this.setData({
       eventChannel: this.getOpenerEventChannel(),
-      containsFinish: options.containsFinish === 'true'
+      containsFinish: options.containsFinish === 'true',
+      oldContainsFinish: options.containsFinish === 'true'
     });
   },
 
@@ -51,14 +52,19 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    if (this.data.oldContainsFinish !== this.data.containsFinish) {
+      // 有改变，则通知父界面
+      var filters = {containsFinish: this.data.containsFinish};
+      this.data.eventChannel.emit('onChange', filters);
+      wx.setStorageSync('filters', filters);
+      getApp().loadTodoList();
+    }
   },
 
   /**

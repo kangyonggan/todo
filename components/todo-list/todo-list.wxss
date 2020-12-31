@@ -1,24 +1,50 @@
 /* components/todo-list/todo-list.wxss */
-.empty-list {
+.todos .empty-list {
   text-align: center;
   margin-top: 100rpx;
   color: #999;
 }
 
-.todo-list .topped .weui-cell view {
+.todos .weui-slideview__btn {
+  padding: 0;
+  font-size: 26rpx;
+  background: #07C160 !important;
+}
+
+.todos .weui-slideview__btn-group_warn .weui-slideview__btn {
+  background: #f60 !important;
+}
+
+.todos .weui-cell__icon, .weui-cell__hd {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.todos .weui-cell__bd {
+  font-size: 30rpx;
+  color: #606060;
+}
+
+.todos .weui-cell__ft {
+  font-size: 25rpx;
+  color: #ccc;
+  font-style: italic;
+}
+
+.todos .topped .weui-cell .weui-cell__bd {
   color: #000 !important;
 }
 
-.todo-list .topped .weui-cell .weui-cell__ft {
+.todos .topped .weui-cell .weui-cell__ft {
   color: #777 !important;
 }
 
-.todo-list .finish .weui-cell view {
+.todos .finish .weui-cell .weui-cell__bd {
   text-decoration-line: line-through;
   color: #ccc !important;
 }
 
-.input {
+.todos .input {
   display: inline-block;
   border-radius: 4px;
   border: 1px solid #dcdfe6;

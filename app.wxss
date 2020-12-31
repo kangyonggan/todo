@@ -1,1 +1,2 @@
 /**app.wxss**/
+@import './components/todo-list/todo-list.wxss';

@@ -1,35 +1,5 @@
 /* pages/note/note.wxss */
-.weui-cell {
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.weui-slideview__btn {
-  padding: 0;
-  font-size: 26rpx;
-  background: #07C160 !important;
-}
-
-.weui-slideview__btn-group_warn .weui-slideview__btn {
-  background: #f60 !important;
-}
-
-.weui-cell__icon, .weui-cell__hd {
-  width: 40rpx;
-  height: 40rpx;
-}
-
-.weui-cell__bd {
-  font-size: 30rpx;
-  color: #606060;
-}
-
-.weui-cell__ft {
-  font-size: 25rpx;
-  color: #ccc;
-  font-style: italic;
-}
-
-.input {
+.search {
   display: inline-block;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
@@ -43,31 +13,10 @@
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 84%; 
   margin-left: 4%;
-  margin-top: 13rpx;
   margin-bottom: 5rpx;
-}
-
-.search {
   background: white;
   padding: 0 30rpx;
   width: auto;
   margin-top: 20rpx;
   width: 83%;
-}
-
-.todo-list {
-  margin-top: 10rpx;
-}
-
-.todo-list .topped .weui-cell view {
-  color: #000 !important;
-}
-
-.todo-list .topped .weui-cell .weui-cell__ft {
-  color: #777 !important;
-}
-
-.todo-list .finish .weui-cell view {
-  text-decoration-line: line-through;
-  color: #ccc !important;
 }

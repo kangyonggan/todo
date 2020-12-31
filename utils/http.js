@@ -65,7 +65,7 @@ function request(method, url, data, resolve, reject) {
     data: data,
     timeout: TIMEOUT * 1000,
     header: {
-      'openid': getApp().openid
+      'openid': wx.getStorageSync('openid')
     },
     success(res) {
       if (res.data.respCo == '0000') {

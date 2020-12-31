@@ -1,6 +1,6 @@
 <view>
   <view>
-    <input class="input search" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
+    <input class="search" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
     <image src="{{ filters.containsFinish ? '../../images/filter-selected.png' : '../../images/filter.png' }}" class="filter" bindtap="openFilter" />
     <view style="margin-top: 90rpx;">
       <todo-list todos="{{todos}}"/>
