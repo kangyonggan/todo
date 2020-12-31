@@ -14,6 +14,10 @@ Component({
     todos: {
       type: Array,
       value: []
+    },
+    showFinish: {
+      type: Boolean,
+      value: false
     }
   },
 

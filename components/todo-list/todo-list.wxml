@@ -1,7 +1,7 @@
 <!--components/todo-list/todo-list.wxml-->
 <view class="todos">
   <scroll-view wx:if="{{ todos.length }}">
-    <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
+    <mp-slideview wx:if="{{showFinish || todo.status === 'NORMAL'}}" wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
       buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}"
       bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
       <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "

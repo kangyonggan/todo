@@ -4,7 +4,7 @@
     bind:whenChangeMonth="whenChangeMonth" bind:takeoverTap="takeoverTap" />
   <view>
     <input class="search" placeholder="{{inputTips}}" bindconfirm="addTodo" value="{{inputVal}}" />
-    <todo-list todos="{{todays}}"/>
+    <todo-list todos="{{todays}}" show-finish="true" />
   </view>
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
 </view>

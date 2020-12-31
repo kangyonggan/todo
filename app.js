@@ -40,10 +40,7 @@ App({
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
 
-    var filters = wx.getStorageSync('filters');
-    var status = filters && filters.containsFinish ? "" : "NORMAL";
-
-    Http.get("note?type=TODO&status=" + status)
+    Http.get("note?type=TODO")
       .then(data => {
         wx.setStorageSync('todos', data.todos);
         wx.setStorageSync('todoHasChenged', true);

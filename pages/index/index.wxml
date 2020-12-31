@@ -3,7 +3,7 @@
     <input class="search" placeholder="新建待办事项" bindconfirm="addTodo" value="{{inputVal}}" />
     <image src="{{ filters.containsFinish ? '../../images/filter-selected.png' : '../../images/filter.png' }}" class="filter" bindtap="openFilter" />
     <view style="margin-top: 90rpx;">
-      <todo-list todos="{{todos}}"/>
+      <todo-list todos="{{todos}}" show-finish="{{filters.containsFinish}}"/>
     </view>
   </view>
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
