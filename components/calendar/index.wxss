@@ -123,6 +123,14 @@
     animation-iteration-count: 1;
 }
 
+.red {
+    color: red;
+}
+
+.red .elegant_festival {
+    color: red;
+}
+
 .date-area-mode {
     width: 100%;
     border-radius: 0;

@@ -287,12 +287,11 @@ Page({
         dates.push({
           year: arr[0],
           month: arr[1],
-          day: arr[2]
+          date: arr[2]
         });
       }
     }
     this.data.calendar.setTodos({
-      dotColor: '#f60', // 待办点标记颜色
       dates: dates
     })
     if (day) {
