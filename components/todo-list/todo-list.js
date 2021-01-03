@@ -71,6 +71,20 @@ Component({
     },
 
     /**
+     * 长按复制
+     */
+    copy: function (e) {
+      wx.setClipboardData({
+        data: e.currentTarget.dataset.content,
+        success: function () {
+          wx.showToast({
+            title: '复制成功',
+          });
+        }
+      });
+    },
+
+    /**
      * 暂存待办
      * 
      * @param {*} e 

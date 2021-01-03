@@ -65,7 +65,7 @@ Page({
       content: e.detail.value
     }).then(data => {
       // 刷新列表
-      this.pullEvent();
+      app.loadTodoList();
       this.setData({
         // 清空内容
         inputVal: ''

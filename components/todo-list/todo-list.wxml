@@ -6,7 +6,9 @@
       bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
       <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
         icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
-        value="{{ todo.content }}" footer="{{ todo.day }}" data-id="{{todo.id}}" bindtap="edit">
+        data-id="{{todo.id}}" bindtap="edit">
+        <view><text selectable='true' bindlongtap='copy' data-content="{{todo.content}}">{{ todo.content }}</text></view>
+        <view slot="footer">{{ todo.day }}</view>
       </mp-cell>
       <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
         bindconfirm="updateTodo" bindblur="pauseTodo" />
