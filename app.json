@@ -3,7 +3,7 @@
     "pages/index/index",
     "pages/about/about",
     "pages/index/filter/filter",
-    "pages/note/note"
+    "pages/calendar/calendar"
   ],
   "useExtendedLib": {
     "weui": true
@@ -25,9 +25,9 @@
         "text": "待办"
       },
       {
-        "selectedIconPath": "images/note-selected.png",
-        "iconPath": "images/note.png",
-        "pagePath": "pages/note/note",
+        "selectedIconPath": "images/calendar-selected.png",
+        "iconPath": "images/calendar.png",
+        "pagePath": "pages/calendar/calendar",
         "text": "日程"
       },
       {
