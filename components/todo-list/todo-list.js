@@ -127,7 +127,7 @@ Component({
 
       var todos = this.properties.todos;
       var todo = Util.getById(todos, id);
-      todo.content = e.detail.value;
+      console.log(todo);
       this.setData({
         todos: Util.updateById(todos, todo)
       });

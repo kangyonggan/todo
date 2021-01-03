@@ -1,4 +1,6 @@
 /* pages/note/note.wxss */
+@import '../../components/todo-list/todo-list.wxss';
+
 .search {
   display: inline-block;
   border-radius: 4px;
