@@ -15,7 +15,7 @@ const TIMEOUT = 30;
  */
 function get(url) {
   return new Promise((resolve, reject) => {
-    request("GET", url, {}, resolve, reject);
+    send("GET", url, {}, resolve, reject);
   })
 }
 /**
@@ -25,7 +25,7 @@ function get(url) {
  */
 function post(url, data) {
   return new Promise((resolve, reject) => {
-    request("POST", url, data, resolve, reject);
+    send("POST", url, data, resolve, reject);
   })
 }
 /**
@@ -35,7 +35,17 @@ function post(url, data) {
  */
 function put(url, data) {
   return new Promise((resolve, reject) => {
-    request("PUT", url, data, resolve, reject);
+    send("PUT", url, data, resolve, reject);
+  })
+}
+/**
+ * request请求
+ * 
+ * @param {*} url 
+ */
+function request(method, url, data) {
+  return new Promise((resolve, reject) => {
+    send(method, url, data, resolve, reject);
   })
 }
 /**
@@ -45,7 +55,7 @@ function put(url, data) {
  */
 function del(url, data) {
   return new Promise((resolve, reject) => {
-    request("DELETE", url, data, resolve, reject);
+    send("DELETE", url, data, resolve, reject);
   })
 }
 
@@ -58,7 +68,7 @@ function del(url, data) {
  * @param {*} resolve 
  * @param {*} reject 
  */
-function request(method, url, data, resolve, reject) {
+function send(method, url, data, resolve, reject) {
   wx.request({
     method: method,
     url: BASE_URL + url,
@@ -74,7 +84,8 @@ function request(method, url, data, resolve, reject) {
         reject(res.data.respMsg);
       }
     },
-    fail: function () {
+    fail: function (e) {
+      console.log(e);
       reject('网络不稳定，请稍后再试！');
     }
   })
@@ -84,5 +95,6 @@ module.exports = {
   get: get,
   post: post,
   put: put,
-  delete: del
+  delete: del,
+  request: request
 }

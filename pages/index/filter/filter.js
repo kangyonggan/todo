@@ -10,7 +10,8 @@ Page({
      * 显示已完成
      */
     containsFinish: false,
-    oldContainsFinish: false
+    oldContainsFinish: false,
+    key: ''
   },
 
   /**
@@ -31,7 +32,8 @@ Page({
     this.setData({
       eventChannel: this.getOpenerEventChannel(),
       containsFinish: options.containsFinish === 'true',
-      oldContainsFinish: options.containsFinish === 'true'
+      oldContainsFinish: options.containsFinish === 'true',
+      key: options.key || 'filters'
     });
   },
 
@@ -62,7 +64,7 @@ Page({
       // 有改变，则通知父界面
       var filters = {containsFinish: this.data.containsFinish};
       this.data.eventChannel.emit('onChange', filters);
-      wx.setStorageSync('filters', filters);
+      wx.setStorageSync(this.data.key, filters);
       getApp().loadTodoList();
     }
   },

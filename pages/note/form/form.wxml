@@ -1,0 +1,7 @@
+<!--pages/note/form/form.wxml-->
+<view>
+  <editor id="editor" class="ql-container" placeholder="好记性不如烂笔头~" bindready="onEditorReady" >
+  </editor>
+  <button loading="{{loading}}" bindtap="submit" type="primary" class="submit">保  存</button>
+  <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
+</view>

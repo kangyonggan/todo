@@ -141,7 +141,6 @@ Component({
 
       var todos = this.properties.todos;
       var todo = Util.getById(todos, id);
-      console.log(todo);
       this.setData({
         todos: Util.updateById(todos, todo)
       });

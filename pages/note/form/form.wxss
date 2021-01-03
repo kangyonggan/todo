@@ -1,0 +1,19 @@
+/* pages/note/form/form.wxss */
+
+.ql-container {
+  height: calc(100vh - 130rpx);
+  margin: 20rpx;
+  width: 710rpx;
+  font-size: 32rpx;
+}
+
+.submit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0;
+  height: 86rpx;
+  width: 100% !important;
+  line-height: 50rpx !important;
+}
