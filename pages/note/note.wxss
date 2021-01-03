@@ -7,7 +7,7 @@
   width: auto !important;
   z-index: 999;
   background: white !important;
-  border-color: #dcdfe6;
+  border-color: #dcdfe6 !important;
   color: #777 !important;
 }
 
