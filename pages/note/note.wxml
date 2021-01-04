@@ -3,7 +3,7 @@
   <view>
     <button plain="true" class="add-note" bindtap="newNote">
       <image src="../../images/add.png" />
-      新建笔记
+      新建便签
     </button>
     <image src="{{ filters.containsFinish ? '../../images/filter-selected.png' : '../../images/filter.png' }}" class="filter" bindtap="openFilter" />
     <scroll-view class="notes" wx:if="{{ notes.length }}">

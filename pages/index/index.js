@@ -97,6 +97,9 @@ Page({
   onShow: function () {
     if (wx.getStorageSync('todoHasChenged')) {
       this.setData({
+        todos: []
+      });
+      this.setData({
         todos: wx.getStorageSync('todos')
       });
       wx.setStorageSync('todoHasChenged', false);

@@ -184,6 +184,7 @@ Component({
      */
     slideButtonTap(e) {
       var id = e.currentTarget.dataset.id;
+      var status = e.currentTarget.dataset.status;
 
       if (e.detail.index) {
         // 完成
@@ -198,8 +199,7 @@ Component({
           app.event.emit('event', 'error', respMsg);
         });
       } else {
-        var note = Util.getById(this.properties.todos, id);
-        if (note.status === 'FINISH') {
+        if (status === 'FINISH') {
           // 恢复
           Http.put("note", {
             id: id,

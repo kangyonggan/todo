@@ -36,7 +36,7 @@
         "selectedIconPath": "images/note-selected.png",
         "iconPath": "images/note.png",
         "pagePath": "pages/note/note",
-        "text": "笔记"
+        "text": "便签"
       },
       {
         "selectedIconPath": "images/about-selected.png",

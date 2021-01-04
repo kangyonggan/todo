@@ -1,17 +1,20 @@
 <!--components/todo-list/todo-list.wxml-->
 <view class="todos">
   <scroll-view wx:if="{{ todos.length }}">
-    <mp-slideview wx:if="{{showFinish || todo.status === 'NORMAL'}}" wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
+    <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
       buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}"
-      bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
-      <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
-        icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
-        data-id="{{todo.id}}" bindtap="edit">
-        <view><text selectable='true' bindlongtap='copy' data-content="{{todo.content}}">{{ todo.content }}</text></view>
-        <view slot="footer">{{ todo.day }}</view>
-      </mp-cell>
-      <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
-        bindconfirm="updateTodo" bindblur="pauseTodo" />
+      data-status="{{todo.status}}" bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
+      <view>
+        <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
+          icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
+          data-id="{{todo.id}}" bindtap="edit">
+          <view><text selectable='true' bindlongtap='copy' data-content="{{todo.content}}">{{ todo.content }}</text>
+          </view>
+          <view slot="footer">{{ todo.day }}</view>
+        </mp-cell>
+        <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
+          bindconfirm="updateTodo" bindblur="pauseTodo" />
+      </view>
     </mp-slideview>
   </scroll-view>
   <view wx:else class="empty-list">
