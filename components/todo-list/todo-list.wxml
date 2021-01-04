@@ -4,7 +4,7 @@
     <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
       buttons="{{todo.status==='FINISH' ? slideButtonsRecovery : (todo.isTopped?slideButtonsTopped:slideButtons)}}"
       data-status="{{todo.status}}" bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
-      <view>
+      <view wx:if="{{showFinish || todo.status === 'NORMAL'}}">
         <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
           icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
           data-id="{{todo.id}}" bindtap="edit">
