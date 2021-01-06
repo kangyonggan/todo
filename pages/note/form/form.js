@@ -101,15 +101,18 @@ Page({
     if (this.data.loading) {
       return;
     }
-    this.setData({
-      loading: true
-    });
     this.editorCtx.getContents({
       success: function (res) {
+        if (!res.text.trim()) {
+          return;
+        }
         var note = that.data.note;
         note.content = res.text;
         that.setData({
           note: note
+        });
+        that.setData({
+          loading: true
         });
         // 发送请求
         Http.request(that.data.note.id ? 'PUT' : 'POST', "note", {
