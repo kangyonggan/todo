@@ -1,4 +1,6 @@
 // pages/index/filter/filter.js
+var Http = require('../../../utils/http');
+
 Page({
 
   /**
@@ -11,7 +13,40 @@ Page({
      */
     containsFinish: false,
     oldContainsFinish: false,
+    subscribeMessage: false,
     key: ''
+  },
+
+  /**
+   * 订阅消息
+   */
+  switchSubscribeMessage (e) {
+    var that = this;
+    var msgId = 'JySaKT9Nl1cS2K40EsP_fQxIf55R-nRBnz0LrmJ9Tq8';
+
+    if (e.detail.value) {
+      wx.requestSubscribeMessage({
+        tmplIds: [msgId],
+        success: function (e1) {
+          that.subscribeMsg(msgId, e1[msgId]);
+        }
+      });
+    } else {
+      that.subscribeMsg(msgId, 'reject');
+    }
+  },
+
+  subscribeMsg(msgId, status) {
+    Http.post('note/subscribeMessage', {
+      msgId: msgId,
+      status: status
+    }).then(() => {
+      var res = status === 'accept';
+      wx.setStorageSync('subMsg', res);
+      this.setData({
+        subscribeMessage: res
+      });
+    });
   },
 
   /**
@@ -33,6 +68,7 @@ Page({
       eventChannel: this.getOpenerEventChannel(),
       containsFinish: options.containsFinish === 'true',
       oldContainsFinish: options.containsFinish === 'true',
+      subscribeMessage: wx.getStorageSync('subMsg') || false,
       key: options.key || 'filters'
     });
   },

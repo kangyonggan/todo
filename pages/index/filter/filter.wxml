@@ -9,5 +9,13 @@
         </view>
       </mp-cell>
     </mp-cells>
+    <mp-cells title="服务项">
+      <mp-cell>
+        <view>订阅消息</view>
+        <view slot="footer">
+          <switch checked="{{subscribeMessage}}" bindchange="switchSubscribeMessage"/>
+        </view>
+      </mp-cell>
+    </mp-cells>
   </view>
 </view>
