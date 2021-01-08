@@ -128,9 +128,7 @@ Component({
           editId: 0,
           todos: Util.updateById(todos, todo)
         });
-
-        wx.setStorageSync('todos', this.properties.todos);
-        wx.setStorageSync('todoHasChenged', true);
+        app.loadTodoList();
       }).catch(respMsg => {
         app.event.emit('event', 'error', respMsg);
         if (todo.originContent === e.detail.value) {
