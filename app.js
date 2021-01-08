@@ -78,6 +78,7 @@ App({
         // 通知index待办加载成功了
         this.event.emit('event', 'loadSuccess');
       }).catch(respMsg => {
+        console.log(respMsg);
         this.event.emit('event', 'error', respMsg);
       }).finally(() => {
         this.loading = false;

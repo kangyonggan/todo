@@ -40,7 +40,8 @@ Page({
     calendar: undefined,
     todos: [],
     error: '',
-    todays: []
+    todays: [],
+    currentMonth: ''
   },
 
   /**
@@ -97,6 +98,9 @@ Page({
    * 初始化待办
    */
   initTodos(day) {
+    if (this.data.currentMonth) {
+      day = this.data.currentMonth;
+    }
     var dates = [];
     var todays = [];
     for (let index = 0; index < this.data.todos.length; index++) {
@@ -159,7 +163,9 @@ Page({
    */
   whenChangeMonth(e) {
     var next = e.detail.next;
-    this.initTodos(next.year + '-' + (next.month < 10 ? '0' + next.month : next.month))
+    var currentMonth = next.year + '-' + (next.month < 10 ? '0' + next.month : next.month);
+    this.setData({currentMonth: currentMonth});
+    this.initTodos();
   },
 
   /**
@@ -205,7 +211,12 @@ Page({
       // 待办加载成功事件
       this.setData({todos: wx.getStorageSync('todos')});
       var day = this.data.calendar.getSelectedDates()[0];
-      this.initDay(day.year, day.month, day.date);
+      if (day) {
+        this.initDay(day.year, day.month, day.date);
+      } else {
+        var day = new Date();
+        this.initDay(day.getFullYear(), day.getMonth() + 1, day.getDate());
+      }
     }
   }
 })

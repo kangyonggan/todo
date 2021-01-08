@@ -2,7 +2,7 @@
 <view class="todos">
   <scroll-view wx:if="{{ todos.length }}">
     <mp-slideview wx:for="{{ todos }}" wx:for-item="todo" show="{{todo.showSlider}}" wx:key="index"
-      buttons="{{todo.buttons}}"  bindshow="showSlider"
+      buttons="{{todo.buttons}}"
       bindbuttontap="slideButtonTap" data-id="{{todo.id}}">
       <view wx:if="{{showFinish || todo.status === 'NORMAL'}}">
         <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
