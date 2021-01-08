@@ -101,7 +101,7 @@ Page({
     var todays = [];
     for (let index = 0; index < this.data.todos.length; index++) {
       var todo = this.data.todos[index];
-      if (day && todo.day === day) {
+      if (day && todo.day.startsWith(day)) {
         todays.push(todo);
       }
       if (todo.day) {
@@ -158,7 +158,8 @@ Page({
    * => current 当前年月 / next 切换后的年月
    */
   whenChangeMonth(e) {
-    this.initTodos()
+    var next = e.detail.next;
+    this.initTodos(next.year + '-' + (next.month < 10 ? '0' + next.month : next.month))
   },
 
   /**
