@@ -47,45 +47,58 @@ Page({
    */
   slideButtonTap(e) {
     var id = e.currentTarget.dataset.id;
+    var note = Util.getById(this.data.notes, id);
 
-    if (e.detail.index) {
-      // 完成
-      Http.put("note", {
-        id: id,
-        status: "FINISH",
-        isTopped: 0
-      }).then(data => {
-        // 拉取最新
-        this.loadNoteList()
-      }).catch(respMsg => {
-        this.setData({
-          error: respMsg
-        });
-      });
-    } else {
-      var note = Util.getById(this.data.notes, id);
-      if (note.status === 'FINISH') {
-        // 恢复
+    if (note.status === 'NORMAL') {
+      if (e.detail.index) {
+        // 完成
         Http.put("note", {
           id: id,
-          status: 'NORMAL',
+          status: "FINISH",
           isTopped: 0
         }).then(data => {
           // 拉取最新
-          this.loadNoteList()
+          this.loadNoteList();
         }).catch(respMsg => {
           this.setData({
             error: respMsg
           });
         });
       } else {
-        // 置顶
+        // 置顶/取消置顶
         Http.put("note", {
           id: id,
           isTopped: note.isTopped ? 0 : 1
         }).then(data => {
           // 拉取最新
-          this.loadNoteList()
+          this.loadNoteList();
+        }).catch(respMsg => {
+          this.setData({
+            error: respMsg
+          });
+        });
+      }
+    } else {
+      if (e.detail.index) {
+        // 恢复
+        Http.put("note", {
+          id: id,
+          status: "NORMAL"
+        }).then(data => {
+          // 拉取最新
+          this.loadNoteList();
+        }).catch(respMsg => {
+          this.setData({
+            error: respMsg
+          });
+        });
+      } else {
+        // 删除
+        Http.delete("note", {
+          id: id
+        }).then(data => {
+          // 拉取最新
+          this.loadNoteList();
         }).catch(respMsg => {
           this.setData({
             error: respMsg
@@ -240,13 +253,41 @@ Page({
       .then(data => {
         var notes = data.todos;
         for (var i = 0; i < notes.length; i++) {
-          var arr = notes[i].content.split('\n');
+          var note = notes[i];
+          var arr = note.content.split('\n');
           for (var j = 0; j < arr.length; j++) {
             if (arr[j].trim()) {
               notes[i].title = arr[j];
               break;
             }
           }
+
+          var buttons = [];
+          if (note.status === 'NORMAL') {
+            if (note.isTopped) {
+              buttons = [{
+                type: 'warn',
+                text: '取消置顶'
+              }, {
+                text: '完成'
+              }];
+            } else {
+              buttons = [{
+                type: 'warn',
+                text: '置顶'
+              }, {
+                text: '完成'
+              }];
+            }
+          } else {
+            buttons = [{
+              type: 'warn',
+              text: '删除'
+            }, {
+              text: '恢复'
+            }];
+          }
+          note.buttons = buttons;
         }
 
         this.setData({

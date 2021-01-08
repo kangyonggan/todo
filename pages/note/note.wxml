@@ -8,7 +8,7 @@
     <image src="../../images/settings.png" class="filter" bindtap="openFilter" />
     <scroll-view class="notes" wx:if="{{ notes.length }}">
       <mp-slideview wx:if="{{filters.containsFinish || note.status === 'NORMAL'}}" wx:for="{{ notes }}" wx:for-item="note" wx:key="index" 
-      buttons="{{note.status==='FINISH' ? slideButtonsRecovery : (note.isTopped?slideButtonsTopped:slideButtons)}}" bindbuttontap="slideButtonTap" data-id="{{note.id}}">
+      buttons="{{note.buttons}}" bindbuttontap="slideButtonTap" data-id="{{note.id}}">
         <mp-cell class="{{note.isTopped ? 'topped': ''}} {{note.status === 'FINISH' ? 'finish': ''}} " data-id="{{note.id}}" bindtap="edit">
           <view>{{ note.title }}</view>
           <view slot="footer">{{ note.day }}</view>
