@@ -28,31 +28,7 @@ Component({
     /**
      * 当前编辑的ID
      */
-    editId: 0,
-    /**
-     * 左滑按钮组（置顶）
-     */
-    slideButtons: [{
-      type: 'warn',
-      text: '置顶'
-    }, {
-      text: '完成'
-    }],
-    /**
-     * 左滑按钮组（取消置顶）
-     */
-    slideButtonsTopped: [{
-      type: 'warn',
-      text: '取消置顶'
-    }, {
-      text: '完成'
-    }],
-    /**
-     * 左滑按钮组（恢复）
-     */
-    slideButtonsRecovery: [{
-      text: '恢复'
-    }]
+    editId: 0
   },
 
   /**
@@ -183,26 +159,14 @@ Component({
      */
     slideButtonTap(e) {
       var id = e.currentTarget.dataset.id;
+      var note = Util.getById(this.properties.todos, id);
 
-      if (e.detail.index) {
-        // 完成
-        Http.put("note", {
-          id: id,
-          status: "FINISH",
-          isTopped: 0
-        }).then(data => {
-          // 拉取最新
-          app.loadTodoList();
-        }).catch(respMsg => {
-          app.event.emit('event', 'error', respMsg);
-        });
-      } else {
-        var note = Util.getById(this.properties.todos, id);
-        if (note.status === 'FINISH') {
-          // 恢复
+      if (note.status === 'NORMAL') {
+        if (e.detail.index) {
+          // 完成
           Http.put("note", {
             id: id,
-            status: 'NORMAL',
+            status: "FINISH",
             isTopped: 0
           }).then(data => {
             // 拉取最新
@@ -211,10 +175,33 @@ Component({
             app.event.emit('event', 'error', respMsg);
           });
         } else {
-          // 置顶
+          // 置顶/取消置顶
           Http.put("note", {
             id: id,
             isTopped: note.isTopped ? 0 : 1
+          }).then(data => {
+            // 拉取最新
+            app.loadTodoList();
+          }).catch(respMsg => {
+            app.event.emit('event', 'error', respMsg);
+          });
+        }
+      } else {
+        if (e.detail.index) {
+          // 恢复
+          Http.put("note", {
+            id: id,
+            status: "NORMAL"
+          }).then(data => {
+            // 拉取最新
+            app.loadTodoList();
+          }).catch(respMsg => {
+            app.event.emit('event', 'error', respMsg);
+          });
+        } else {
+          // 删除
+          Http.delete("note", {
+            id: id
           }).then(data => {
             // 拉取最新
             app.loadTodoList();

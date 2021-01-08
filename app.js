@@ -42,6 +42,37 @@ App({
 
     Http.get("note?type=TODO")
       .then(data => {
+        for (var i = 0; i < data.todos.length; i++) {
+          var todo = data.todos[i];
+
+          var buttons = [];
+          if (todo.status === 'NORMAL') {
+            if (todo.isTopped) {
+              buttons = [{
+                type: 'warn',
+                text: '取消置顶'
+              }, {
+                text: '完成'
+              }];
+            } else {
+              buttons = [{
+                type: 'warn',
+                text: '置顶'
+              }, {
+                text: '完成'
+              }];
+            }
+          } else {
+            buttons = [{
+              type: 'warn',
+              text: '删除'
+            }, {
+              text: '恢复'
+            }];
+          }
+          todo.buttons = buttons;
+        }
+
         wx.setStorageSync('todos', data.todos);
         wx.setStorageSync('todoHasChenged', true);
         // 通知index待办加载成功了

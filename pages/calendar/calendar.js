@@ -118,9 +118,6 @@ Page({
     })
     if (day) {
       this.setData({
-        todays: []
-      });
-      this.setData({
         todays: todays
       });
     }
@@ -205,9 +202,6 @@ Page({
       });
     } else if (type === 'loadSuccess') {
       // 待办加载成功事件
-      this.setData({
-        todos: []
-      });
       this.setData({todos: wx.getStorageSync('todos')});
       var day = this.data.calendar.getSelectedDates()[0];
       this.initDay(day.year, day.month, day.date);
