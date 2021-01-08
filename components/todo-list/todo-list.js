@@ -141,17 +141,16 @@ Component({
 
       var todos = this.properties.todos;
       var todo = Util.getById(todos, id);
-      this.setData({
-        todos: Util.updateById(todos, todo)
-      });
 
       // 更新
       Http.put("note", {
         id: id,
         content: e.detail.value
       }).then(data => {
+        todo.pause = false;
         this.setData({
-          editId: 0
+          editId: 0,
+          todos: Util.updateById(todos, todo)
         });
 
         wx.setStorageSync('todos', this.properties.todos);
