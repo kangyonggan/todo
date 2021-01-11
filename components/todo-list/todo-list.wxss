@@ -39,7 +39,7 @@
 
 .todos .topped .weui-cell .weui-cell__bd {
   color: #000 !important;
-  font-family: '黑体';
+  font-weight: bold;
 }
 
 .todos .topped .weui-cell .weui-cell__ft {
