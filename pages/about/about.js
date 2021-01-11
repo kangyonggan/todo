@@ -5,7 +5,18 @@ Page({
    * 页面的初始数据
    */
   data: {
+    openid: wx.getStorageSync('openid')
+  },
 
+  copy() {
+    wx.setClipboardData({
+      data: wx.getStorageSync('openid'),
+      success: function () {
+        wx.showToast({
+          title: '复制成功',
+        });
+      }
+    });
   },
 
   /**

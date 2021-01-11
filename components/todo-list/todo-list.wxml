@@ -8,9 +8,16 @@
         <mp-cell class="{{todo.isTopped ? 'topped': ''}} {{todo.status === 'FINISH' ? 'finish': ''}} "
           icon="{{ todo.pause ? '../../../images/edit.png' : '' }}" wx:if="{{ editId !== todo.id }}"
           data-id="{{todo.id}}" bindtap="edit">
-          <view><text selectable='true' bindlongtap='copy' data-content="{{todo.content}}">{{ todo.content }}</text>
+          <view><text selectable='true' catchlongpress='copy' data-content="{{todo.content}}">{{ todo.content }}</text>
           </view>
-          <view slot="footer">{{ todo.day }}</view>
+          <picker slot="footer" mode="date" data-id="{{todo.id}}" value="{{todo.day}}" catchtap="editDay" bindchange="bindDateChange">
+            <view wx:if="{{todo.day}}">
+              {{todo.day}}
+            </view>
+            <view wx:else class="icon-date">
+              <image src="../../images/calendar.png" />
+            </view>
+          </picker>
         </mp-cell>
         <input wx:else data-id="{{todo.id}}" focus="true" class="input" value="{{ todo.content }}" placeholder="输入待办事项"
           bindconfirm="updateTodo" bindblur="pauseTodo" />

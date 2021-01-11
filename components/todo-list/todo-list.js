@@ -152,6 +152,29 @@ Component({
       });
     },
 
+    editDay(e) {
+    },
+
+    bindDateChange(e) {
+      console.log(e);
+      var id = e.currentTarget.dataset.id;
+      var todos = this.properties.todos;
+      var todo = Util.getById(todos, id);
+
+      // 更新
+      Http.put("note", {
+        id: id,
+        day: e.detail.value
+      }).then(data => {
+        this.setData({
+          todos: Util.updateById(todos, todo)
+        });
+        app.loadTodoList();
+      }).catch(respMsg => {
+        app.event.emit('event', 'error', respMsg);
+      });
+    },
+
     /**
      * 置顶/完成/恢复
      */

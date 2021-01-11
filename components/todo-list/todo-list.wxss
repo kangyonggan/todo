@@ -29,10 +29,17 @@
   font-size: 25rpx;
   color: #ccc;
   font-style: italic;
+  line-height: 50rpx;
+}
+
+.icon-date image {
+  height: 40rpx;
+  width: 40rpx;
 }
 
 .todos .topped .weui-cell .weui-cell__bd {
   color: #000 !important;
+  font-family: '黑体';
 }
 
 .todos .topped .weui-cell .weui-cell__ft {
